@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="Dashboards.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Base styles */
+    :root {
+      --primary-color: #4a90e2;
+      --secondary-color: #645cff;
+      --success-color: #28a745;
+      --warning-color: #ff9800;
+      --danger-color: #dc3545;
+      --info-color: #17a2b8;
+      --dark-color: #343a40;
+      --light-color: #f8f9fa;
+      --gradient-start: #6366f1;
+      --gradient-end: #4338ca;
+    }
+        /* Animation definitions */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: var(--light-color);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header styles */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 90px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--header-bg);
+      padding: 10px 20px;
+      box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      box-sizing: border-box;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      transition: all 0.3s;
+      background: rgba(108, 92, 231, 0.1);
+    }
+
+    .toggle-btn:hover {
+      background-color: var(--primary-color);
+      color:white;
+      transform: rotate(90deg);
+    }
+
+    .logo {
+      text-align: center;
+      animation: pulse 4s infinite;
+    }
+
+    .company-logo {
+      max-width: 150px;
+      height: auto;
+      transition: all 0.3s;
+    }
+
+    .company-logo:hover {
+      transform: scale(1.05);
+    }
+
+    /* Search Bar */
+    .search-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 350px;
+      margin-left: 20px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 45px 12px 20px;
+      border: 2px solid rgba(108, 92, 231, 0.2);
+      border-radius: 30px;
+      outline: none;
+      font-size: 16px;
+      background: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 5px 20px rgba(108, 92, 231, 0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background: url('https://cdn-icons-png.flaticon.com/512/149/149852.png') no-repeat center;
+      background-size: contain;
+      filter: hue-rotate(200deg);
+    }
+
+    /* Header right section */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      animation: fadeIn 1s ease-out;
+      margin-right: 20px;
+    }
+
+    .header-right .icon,
+    .notification-icon,
+    .calenadar {
+      color: var(--dark-color);
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 12px;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .header-right .icon:hover,
+    .notification-icon:hover,
+    .calenadar:hover {
+      background-color: rgba(108, 92, 231, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .notification-icon::after {
+      /* content: ''; */
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--danger-color);
+      color: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 1.5s infinite;
+    }
+
+
+    /* Sidebar styles */
+    .sidebar {
+      width: 195px;
+      height: calc(100vh - 100px);
+      position: fixed;
+      left: 0;
+      top: 90px;
+      background: white;
+      box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+
+    .sidebar.collapsed {
+      width: 70px;
+    }
+
+    .sidebar.collapsed .nav-links span,
+    .sidebar.collapsed .profile h3,
+    .sidebar.collapsed .profile p {
+      display: none;
+    }
+
+    .sidebar.collapsed .nav-links a {
+      justify-content: center;
+      padding: 12px 5px;
+    }
+
+    .sidebar.collapsed .nav-links i {
+      margin: 0;
+    }
+
+    .profile {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .profile-picture-display {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar.collapsed .profile-picture-display {
+      width: 40px;
+      height: 40px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-links li {
+      margin-bottom: 5px;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: var(--dark-color);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .nav-links a i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    /* Dropdown styles */
+    .dropdown {
+      display: none;
+      list-style: none;
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 5px;
+      padding: 5px 0;
+    }
+
+    .dropdown a {
+      padding: 10px 15px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      color: var(--dark-color);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .dropdown a:hover {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .has-dropdown > a {
+      position: relative;
+      padding-right: 30px;
+    }
+
+    .has-dropdown > a i.fa-chevron-down {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      transition: transform 0.2s ease;
+    }
+
+    .has-dropdown.active > a i.fa-chevron-down {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      margin-left: 195px;
+      margin-top: 90px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      background-color: #f8fafc;
+      height: calc(100vh - 90px);
+      overflow-y: auto;
+    }
+
+    .main-content.expanded {
+      margin-left: 70px;
+    }
+
+    .content-section {
+      height: 100%;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 12px;
+      /* box-shadow: 0 4px 6px rgba(0,0,0,0.1); */
+    }
+
+    /* Logout Button Link Container */
+    a[href="Clock.html"] {
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    /* Logout Button Styles */
+    .logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-btn:hover {
+      background-color: #c82333;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .logout-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-btn i {
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .logout-btn:hover i {
+      transform: translateX(-2px);
+    }
+
+    .selected-module {
+      background-color: #4a90e2;
+      color: white !important;
+    }
+
+    .status-dropdown {
+      width: 120px;
+      padding: 8px;
+      border: 1px solid #d1d1d1;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: bold;
+      background: white;
+      color: black;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      color: var(--dark-color);
+      font-size: 1.5rem;
+    }
+
+    .modal-content form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .modal-content label {
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+
+    .modal-content input[type="text"],
+    .modal-content input[type="color"] {
+      padding: 8px;
+      border: 1px solid #d1d1d1;
+      border-radius: 5px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .modal-content input[type="color"] {
+      padding: 2px;
+      height: 40px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .modal-buttons button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .modal-buttons .submit-btn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .modal-buttons .submit-btn:hover {
+      background-color: #3a7bd5;
+    }
+
+    .modal-buttons .cancel-btn {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .modal-buttons .cancel-btn:hover {
+      background-color: #c82333;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        flex-wrap: wrap;
+        justify-content: center;
+        height: auto;
+        padding: 10px;
+      }
+
+      .logo {
+        margin-bottom: 5px;
+      }
+
+      .search-container {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+        margin-top: 10px;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .header > span {
+        justify-content: center;
+        width: 100%;
+      }
+    }
+
+    @media screen and (max-width: 1200px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .main-content {
+        margin-left: 200px;
+      }
+    }
+
+    @media screen and (max-width: 992px) {
+      .toggle-btn {
+        display: block;
+      }
+
+      .sidebar {
+        width: 195px;
+        left: -195px;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .header-right {
+        gap: 10px;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .header {
+        padding: 10px;
+      }
+
+      .header-left {
+        gap: 10px;
+      }
+
+      .company-logo {
+        max-width: 150px;
+      }
+
+      .search-container {
+        display: none;
+      }
+
+      .header-right {
+        gap: 8px;
+      }
+
+      .icon,
+      .notification-icon i,
+      .calenadar i {
+        font-size: 16px;
+      }
+
+      .logout-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+    }
+
+    @media screen and (max-width: 576px) {
+      .header-right .icon {
+        display: none;
+      }
+
+      .company-logo {
+        max-width: 120px;
+      }
+
+      .profile-picture-display {
+        width: 80px;
+        height: 80px;
+      }
+
+      .sidebar {
+        width: 100%;
+        left: -100%;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+    }
+
+    .sidebar.collapsed .status-dropdown {
+      display: none;
+    }
+
+    .sidebar.collapsed .profile {
+      padding: 15px 0 5px 0;
+    }
+
+    .sidebar.collapsed .has-dropdown > a i.fa-chevron-down {
+      display: none;
+    }
+
+    /* Header profile picture */
+    .header-profile-picture {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-left: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .header-profile-picture:hover {
+      transform: scale(1.1);
+    }
+
+    /* Ensure header-right aligns items properly */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px; /* Adjusted gap for better spacing */
+    }
+
+    /* Responsive adjustments */
+    @media screen and (max-width: 768px) {
+      .header-profile-picture {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    @media screen and (max-width: 576px) {
+      .header-profile-picture {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    /* Header Icons */
+    .globe-icon, 
+    .envelope-icon, 
+    .bell-icon, 
+    .calendar-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      display: inline-block;
+      vertical-align: middle;
+      transition: transform 0.2s ease;
+    }
+
+    .icon:hover .flaticon-custom,
+    .notification-icon:hover .flaticon-custom,
+    .calenadar:hover .flaticon-custom {
+      transform: scale(1.1);
+    }
+
+    /* Specific icon colors */
+    .globe-icon {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/814/814513.png');
+    }
+
+    .envelope-icon {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/542/542638.png');
+    }
+
+    .bell-icon {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/1827/1827425.png');
+    }
+
+    .calendar-icon {
+      background-image: url('https://cdn-icons-png.flaticon.com/512/3652/3652191.png');
+    }
+  </style>
+</head>
+  <body>
+    
+      <div class="sidebar">
+          <ul class="nav-links">
+              <li><a href="javascript:void(0)"><i class="fas fa-home" style="color: #28a745;"></i> <span>Home</span></a></li>
+              <li class="has-dropdown">
+                  <a href="javascript:void(0)"><i class="fas fa-tachometer-alt" style="color: #ff5722;"></i> <span>HRMS</span> <i class="fas fa-chevron-down"></i></a>
+        <ul class="dropdown">
+          <li><a href="Recuriment.html" target="iframe-content" title="Recruitment"><i class="fas fa-user-plus"></i><span> Recruitment</span></a></li>
+          <li><a href="Hr's_profile.html" target="iframe-content" title="Profile"><i class="fas fa-id-badge"></i><span> Hr_Profile</span></a></li>
+          <li><a href="Hiring_page.html" target="iframe-content" title="Hiring_page"><i class="fas fa-briefcase"></i> <span>Hiring</span></a></li>
+          <li><a href="OnboardingForm.html" target="iframe-content" title="onboarding"><i class="fas fa-briefcase"></i> <span>Onboarding</span></a></li>
+          <li><a href="Emp_calendar.html" target="iframe-content" title="calendar"><i class="fas fa-calendar-alt"></i><span>Calendar</span></a></li>
+          <li><a href="Staff_Management.html" target="iframe-content" title="Staff_Management"><i class="fas fa-users"></i> <span>Staff Management</span></a></li>
+          <li><a href="Project.html" target="iframe-content" title="Project"><i class="fas fa-tasks"></i><span> Project Management</span></a></li>
+          <li><a href="TestTask_hr.html" target="iframe-content" title="Task_Management"><i class="fas fa-check-circle"></i> <span>Task Management</span></a></li>
+          <li><a href="Leave_Management.html" target="iframe-content" title="Leave_Management"><i class="fas fa-plane-departure"></i><span>Leave Management</span></a></li>
+          <li><a href="TestAttendancemanagement.html" target="iframe-content" title="Attendance_Management"><i class="fas fa-user-check"></i><span> Attendance</span></a></li>
+          <li><a href="TestClaim_Hr.html" target="iframe-content" title="Claims_Managements"><i class="fas fa-file-invoice-dollar"></i> <span>Claims</span></a></li>
+          <li><a href="Notifications.html" target="iframe-content" title="Notification"><i class="fas fa-bell"></i><span> Notifications</span></a></li>
+          <li><a href="Assert_Management.html" target="iframe-content" title="Asset_Management"><i class="fas fa-box"></i> <span>Asset Request</span></a></li>
+          <li><a href="Assert_Submit.html" target="iframe-content" title="Asset_Management"><i class="fas fa-box"></i> <span>Asset Management</span></a></li>
+          <li><a href="Increment-Bounus.html" target="iframe-content" title="Increment-Bounus"><i class="fas fa-chart-line"></i><span> Increment & Bonus</span></a></li>
+          <li><a href="Apprisal_Hr.html" target="iframe-content" title="Apprisal"><i class="fas fa-chart-line"></i><span> Apprisal</span></a></li>
+          <li><a href="Payroll_Management.html" target="iframe-content" title="Payroll_Management"><i class="fas fa-money-bill-wave"></i> <span>Payroll</span></a></li>
+          <li><a href="Training_Management.html" target="iframe-content" title="Training_Management"><i class="fas fa-chalkboard-teacher"></i><span> Training</span></a></li>
+          <li><a href="Career_Progression.html" target="iframe-content" title="career_progression"><i class="fas fa-chart-bar"></i> <span>Career Progression</span></a></li>
+          <li><a href="Offboarding_Management.html" target="iframe-content" title="Offboarding_Management"><i class="fas fa-sign-out-alt"></i> <span>Offboarding</span></a></li>
+        </ul>
+              </li>
+              <li class="has-dropdown">
+                  <a href="javascript:void(0)"><i class="fas fa-user" style="color: #007bff;"></i> <span>EMPLOYEE</span> <i class="fas fa-chevron-down"></i></a>
+        <ul class="dropdown">
+          <li><a href="Personalinfo_Dashboard.html" target="iframe-content" title="Onboarding"><i class="fas fa-user-plus"></i><span>Onboarding</span></a></li>
+          <li><a href="Assert.html" target="iframe-content" title="Asset"><i class="fas fa-box"></i><span> Asset</span></a></li>
+          <li><a href="Profile.html" target="iframe-content" title="Profile"><i class="fas fa-id-badge"></i><span>Profile</span></a></li>
+          <li><a href="Courses_Homepage.html" target="iframe-content" title="Courses"><i class="fas fa-book"></i><span>Courses</span></a></li>
+          <li><a href="Emp_calendar.html" target="iframe-content" title="calendar"><i class="fas fa-calendar-alt"></i><span>Calendar</span></a></li>
+          <li><a href="TestTask_emp.html" target="iframe-content" title="Task"><i class="fas fa-tasks"></i> <span>Task</span></a></li>
+          <li><a href="Emp_Leave_Calendar.html" target="iframe-content" title="Leave"><i class="fas fa-plane-departure"></i> <span>Leave</span></a></li>
+          <li><a href="Clock.html" target="iframe-content" title="Attendance"><i class="fas fa-user-check"></i> <span>Attendance</span></a></li>
+          <li><a href="Emp_payslip.html" target="iframe-content" title="Pay-Slip"><i class="fas fa-money-bill-wave"></i> <span>Pay-Slip</span></a></li>
+          <li><a href="Testclaim_Emp.html" target="iframe-content" title="Claims"><i class="fas fa-file-invoice-dollar"></i> <span>Claims</span></a></li>
+          <li><a href="Emp_Notification.html" target="iframe-content" title="Notification"><i class="fas fa-bell"></i><span>Notifications</span></a></li>
+          <li><a href="Emp_career_progression.html" target="iframe-content" title="career_progression"><i class="fas fa-chart-bar"></i><span> Career Progression</span></a></li>
+          <li><a href="Performance_management.html" title="Appraisal" target="iframe-content"><i class="fas fa-chart-line"></i><span> Appraisal</span></a></li>
+          <li><a href="Offboarding.html" target="iframe-content" title="Offboarding"><i class="fas fa-sign-out-alt"></i> <span>Offboarding</span></a></li>
+        </ul>
+              </li>
+              <li><a href="javascript:void(0)"><i class="fas fa-chart-line" style="color: #4caf50;"></i> <span>Analytics</span></a></li>
+              <li><a href="javascript:void(0)"><i class="fas fa-tasks" style="color: #ff9800;"></i> <span>Task List</span></a></li>
+              <li><a href="javascript:void(0)"><i class="fas fa-clock" style="color: #2196f3;"></i> <span>Tracking</span></a></li>
+              <li><a href="javascript:void(0)"><i class="fas fa-cog" style="color: #9c27b0;"></i> <span>Settings</span></a></li>
+              <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt" style="color: #2196f3;"></i> <span>Logout</span></a></li>
+          </ul>
+      </div>
+
+      <div class="main-content">
+          <header class="header">
+              <div class="header-left">
+                  <div class="logo">
+                      <img src="image.webp" alt="Company Logo" class="company-logo">
+                  </div>
+                  <button class="toggle-btn">
+                      <i class="fas fa-bars" ></i>
+                  </button>
+<div class="search-container">
+    <input type="text" class="search-input" placeholder="Search..." id="globalSearch">
+    <span class="search-icon"><i class="fas fa-search"></i></span>
+</div>
+              </div>
+              <div class="header-right">
+                  <span class="icon">
+                      <i class="fa-solid fa-globe"></i> English
+                  </span>
+                  <span class="icon">
+                      <i class="flaticon-custom envelope-icon" style="background-image: url('https://cdn-icons-png.flaticon.com/512/542/542638.png'); width: 20px; height: 20px; display: inline-block;"></i>
+                  </span>
+                  <span class="notification-icon">
+                      <i class="flaticon-custom bell-icon" style="background-image: url('https://cdn-icons-png.flaticon.com/512/1827/1827425.png'); width: 20px; height: 20px; display: inline-block;"></i>
+                  </span>
+                  <span class="calenadar">
+                      <i class="flaticon-custom calendar-icon" style="background-image: url('https://cdn-icons-png.flaticon.com/512/3652/3652191.png'); width: 20px; height: 20px; display: inline-block;"></i>
+                  </span>
+<div id="user-display" style="display: flex; align-items: center; gap: 10px;">
+    <img id="header-profile-picture" src="https://via.placeholder.com/40" alt="Profile" 
+         style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+    <span id="header-username" style="color: #4a90e2;">Guest</span>
+</div>
+                  <select class="status-dropdown available">
+                      <option value="available" class="available">🟢 Available</option>
+                      <option value="busy" class="busy">🔴 Meeting</option>
+                      <option value="away" class="away">🟠 Away</option>
+                      <option value="offline" class="offline">⚫ Offline</option>
+                  </select>
+              </div>
+          </header>
+
+          <div class="content-section">
+              <main style="width: 103%; height: 100vh; ">
+                  <iframe name="iframe-content" src="Content3.html" scrolling="yes" ></iframe>
+              </main>
+          </div>
+      </div>
+
+  <script>// Load Google Fonts for Poppins
+const link = document.createElement('link');
+link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap';
+link.rel = 'stylesheet';
+document.head.appendChild(link);
+
+// Utility function to get cookie value
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+// Unified user data loader
+async function loadUserData() {
+    const headerUsername = document.getElementById('header-username');
+    const headerProfilePic = document.getElementById('header-profile-picture');
+    
+    try {
+        console.log('Attempting to load user data...');
+        
+        const response = await fetch('http://44.223.23.145:3205/api/user', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        console.log('Response status:', response.status);
+        
+        if (response.status === 401) {
+            throw new Error('Please login to continue');
+        }
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.message || 'Failed to load user data');
+        }
+
+        const user = await response.json();
+        console.log('User data:', user);
+        
+        // Update UI elements if they exist
+        if (headerUsername) {
+            headerUsername.textContent = user.name || 'Guest';
+        }
+        
+        if (headerProfilePic) {
+            headerProfilePic.src = user.profilePicture || 'https://via.placeholder.com/40';
+            headerProfilePic.onerror = () => {
+                headerProfilePic.src = 'https://via.placeholder.com/40';
+            };
+        }
+        
+    } catch (error) {
+        console.error('User data load failed:', error);
+        // Redirect to login if unauthorized
+        if (error.message.includes('401') || error.message.includes('403')) {
+            window.location.href = '../Login/index.html';
+        }
+    }
+}
+
+// Sidebar toggle
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+
+    if (sidebar && mainContent) {
+        if (window.innerWidth > 992) {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        } else {
+            sidebar.classList.toggle('active');
+        }
+    }
+}
+
+// Dropdown handling
+function setupDropdowns() {
+    document.querySelectorAll('.has-dropdown').forEach(function (item) {
+        item.addEventListener('click', function (event) {
+            event.stopPropagation();
+            const dropdown = this.querySelector('.dropdown');
+            const isActive = this.classList.contains('active');
+
+            document.querySelectorAll('.has-dropdown').forEach(function (el) {
+                if (el !== item) {
+                    el.classList.remove('active');
+                    const otherDropdown = el.querySelector('.dropdown');
+                    if (otherDropdown) otherDropdown.style.display = 'none';
+                }
+            });
+
+            if (dropdown) {
+                this.classList.toggle('active', !isActive);
+                dropdown.style.display = isActive ? 'none' : 'block';
+            }
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        const target = event.target;
+        const isDropdownOrChild = target.closest('.has-dropdown');
+
+        if (!isDropdownOrChild) {
+            document.querySelectorAll('.has-dropdown').forEach(function (item) {
+                item.classList.remove('active');
+                const dropdown = item.querySelector('.dropdown');
+                if (dropdown) dropdown.style.display = 'none';
+            });
+        }
+    });
+}
+
+// Logout handling
+async function logout() {
+    try {
+        await fetch('http://44.223.23.145:3205/api/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        console.log('Logout successful');
+        window.location.href = '../Login/index.html';
+    } catch (error) {
+        console.error('Error during logout:', error);
+        window.location.href = '../Login/index.html';
+    }
+}
+
+// Responsive handling
+function handleResize() {
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+    if (sidebar && mainContent && window.innerWidth <= 992) {
+        sidebar.classList.remove('collapsed');
+        mainContent.classList.remove('expanded');
+        sidebar.classList.remove('active');
+    }
+}
+
+// Search functionality
+function setupSearch() {
+    const searchInput = document.getElementById('globalSearch');
+    const allLinks = document.querySelectorAll('.nav-links a[target="iframe-content"]');
+    
+    if (searchInput) {
+        // Add event listener for input changes
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            // First search in HRMS dropdown
+            searchInDropdown('.has-dropdown:first-child .dropdown', searchTerm);
+            
+            // Then search in EMPLOYEE dropdown
+            searchInDropdown('.has-dropdown:nth-child(2) .dropdown', searchTerm);
+        });
+        
+        // Add event listener for Enter key
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // Add click event to search icon
+        const searchIcon = document.querySelector('.search-icon');
+        if (searchIcon) {
+            searchIcon.addEventListener('click', performSearch);
+        }
+    }
+    
+    function searchInDropdown(dropdownSelector, searchTerm) {
+        const dropdown = document.querySelector(dropdownSelector);
+        if (!dropdown) return;
+        
+        let foundAny = false;
+        const items = dropdown.querySelectorAll('li');
+        
+        items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            const link = item.querySelector('a');
+            
+            if (searchTerm === '' || text.includes(searchTerm)) {
+                item.style.display = 'block';
+                foundAny = true;
+                
+                // Highlight matching text
+                if (searchTerm !== '' && link) {
+                    const span = link.querySelector('span');
+                    if (span) {
+                        const originalText = span.textContent;
+                        const regex = new RegExp(`(${searchTerm})`, 'gi');
+                        span.innerHTML = originalText.replace(regex, '<mark>$1</mark>');
+                    }
+                }
+            } else {
+                item.style.display = 'none';
+                // Remove highlighting if no match
+                const span = item.querySelector('span');
+                if (span) {
+                    span.innerHTML = span.textContent;
+                }
+            }
+        });
+        
+        // Auto-expand the parent dropdown if matches found
+        const parent = dropdown.closest('.has-dropdown');
+        if (foundAny && searchTerm !== '') {
+            parent.classList.add('active');
+            dropdown.style.display = 'block';
+        }
+    }
+    
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        if (searchTerm === '') return;
+        
+        // Search through all links and find the first match
+        let firstMatch = null;
+        allLinks.forEach(link => {
+            const text = link.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                if (!firstMatch) {
+                    firstMatch = link;
+                }
+            }
+        });
+        
+        // If a match is found, navigate to it
+        if (firstMatch) {
+            firstMatch.click();
+            
+            // Highlight the selected module
+            allLinks.forEach(link => link.classList.remove('selected-module'));
+            firstMatch.classList.add('selected-module');
+            
+            // Close the search input
+            searchInput.value = '';
+            
+            // Remove any highlighting
+            document.querySelectorAll('mark').forEach(mark => {
+                mark.outerHTML = mark.innerHTML;
+            });
+        } else {
+            alert('No matching pages found');
+        }
+    }
+}
+
+// Initialize all functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Load user data
+    loadUserData();
+    
+    // Setup sidebar toggle
+    const toggleBtn = document.querySelector('.toggle-btn');
+    if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
+    
+    // Setup dropdowns
+    setupDropdowns();
+    
+    // Setup logout
+    const logoutLink = document.getElementById('logoutLink');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            logout();
+        });
+    }
+    
+    // Setup search
+    setupSearch();
+    
+    // Setup window resize handler
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    
+    // Setup module selection highlighting
+    const dropdownLinks = document.querySelectorAll('.dropdown li a');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.stopPropagation();
+            dropdownLinks.forEach(item => item.classList.remove('selected-module'));
+            this.classList.add('selected-module');
+        });
+    });
+});
+</script>
+  </body>
+</html>

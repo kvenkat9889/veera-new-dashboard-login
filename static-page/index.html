@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #e84393;
+            --text-color: #2d3748;
+            --background-color: #f7fafc;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --success-color: #2ecc71;
+            --danger-color: #e53e3e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            background-color: white;
+            /* color: var(--text-color); */
+            line-height: 1.6;
+            padding: 2rem;
+            /* background-color: var(--background-color); */
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* Staggered animations */
+        .stat-card:nth-child(1) { animation-delay: 1.1s; }
+        .stat-card:nth-child(2) { animation-delay: 1.2s; }
+        .stat-card:nth-child(3) { animation-delay: 1.3s; }
+        .stat-card:nth-child(4) { animation-delay: 1.4s; }
+        .stat-card:nth-child(5) { animation-delay: 1.5s; }
+        .stat-card:nth-child(6) { animation-delay: 1.6s; }
+        
+        .card:nth-child(1) { animation-delay: 1.7s; }
+        .card:nth-child(2) { animation-delay: 1.8s; }
+        
+        .project-card:nth-child(1) { animation-delay: 1.9s; }
+        .project-card:nth-child(2) { animation-delay: 2.0s; }
+        .project-card:nth-child(3) { animation-delay: 2.1s; }
+        .project-card:nth-child(4) { animation-delay: 2.2s; }
+        .project-card:nth-child(5) { animation-delay: 2.3s; }
+        .project-card:nth-child(6) { animation-delay: 2.4s; }
+        
+        .department-card:nth-child(1) { animation-delay: 2.5s; }
+        .department-card:nth-child(2) { animation-delay: 2.6s; }
+        .department-card:nth-child(3) { animation-delay: 2.7s; }
+        .department-card:nth-child(4) { animation-delay: 2.8s; }
+        .department-card:nth-child(5) { animation-delay: 2.9s; }
+        .department-card:nth-child(6) { animation-delay: 3.0s; }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .dashboard-header {
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.0rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-main-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-icon-container {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .stat-text {
+            flex: 1;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #718096;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0.25rem 0;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding-top: 0.5rem;
+            border-top: 1px solid #eee;
+            width: 100%;
+        }
+
+        .stat-change.positive {
+            color: var(--success-color);
+        }
+
+        .stat-change.negative {
+            color: var(--danger-color);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .card-icon {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            height: 200px;
+            margin-bottom: 1rem;
+        }
+
+        .row-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .project-cards, .department-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .project-card, .department-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Project Card Colors */
+        .project-card:nth-child(1) { background: rgba(52, 152, 219, 0.1); }
+        .project-card:nth-child(2) { background: rgba(232, 67, 147, 0.1); }
+        .project-card:nth-child(3) { background: rgba(46, 204, 113, 0.1); }
+        .project-card:nth-child(4) { background: rgba(243, 156, 18, 0.1); }
+        .project-card:nth-child(5) { background: rgba(155, 89, 182, 0.1); }
+        .project-card:nth-child(6) { background: rgba(26, 188, 156, 0.1); }
+
+        /* Department Card Colors */
+        .department-card:nth-child(1) { background: rgba(52, 152, 219, 0.1); }
+        .department-card:nth-child(2) { background: rgba(232, 67, 147, 0.1); }
+        .department-card:nth-child(3) { background: rgba(46, 204, 113, 0.1); }
+        .department-card:nth-child(4) { background: rgba(243, 156, 18, 0.1); }
+        .department-card:nth-child(5) { background: rgba(155, 89, 182, 0.1); }
+        .department-card:nth-child(6) { background: rgba(26, 188, 156, 0.1); }
+
+        /* Top border effect */
+        .project-card::before, .department-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            transition: all 0.3s ease;
+        }
+
+
+        .project-card:hover, .department-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-card:hover::before, .department-card:hover::before {
+            height: 6px;
+        }
+
+        /* Hover text color change */
+        .project-card:nth-child(1):hover .project-card-name { color: #3498db; }
+        .project-card:nth-child(2):hover .project-card-name { color: #e84393; }
+        .project-card:nth-child(3):hover .project-card-name { color: #2ecc71; }
+        .project-card:nth-child(4):hover .project-card-name { color: #f39c12; }
+        .project-card:nth-child(5):hover .project-card-name { color: #9b59b6; }
+        .project-card:nth-child(6):hover .project-card-name { color: #1abc9c; }
+
+        .department-card:nth-child(1):hover .department-name { color: #3498db; }
+        .department-card:nth-child(2):hover .department-name { color: #e84393; }
+        .department-card:nth-child(3):hover .department-name { color: #2ecc71; }
+        .department-card:nth-child(4):hover .department-name { color: #f39c12; }
+        .department-card:nth-child(5):hover .department-name { color: #9b59b6; }
+        .department-card:nth-child(6):hover .department-name { color: #1abc9c; }
+        .project-card-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-card-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+.department-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.department-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+        /* Icon colors matching their cards */
+        .project-card:nth-child(1) .project-card-icon i,
+        .department-card:nth-child(1) .department-icon i { color: #3498db; }
+        
+        .project-card:nth-child(2) .project-card-icon i,
+        .department-card:nth-child(2) .department-icon i { color: #e84393; }
+        
+        .project-card:nth-child(3) .project-card-icon i,
+        .department-card:nth-child(3) .department-icon i { color: #2ecc71; }
+        
+        .project-card:nth-child(4) .project-card-icon i,
+        .department-card:nth-child(4) .department-icon i { color: #f39c12; }
+        
+        .project-card:nth-child(5) .project-card-icon i,
+        .department-card:nth-child(5) .department-icon i { color: #9b59b6; }
+        
+        .project-card:nth-child(6) .project-card-icon i,
+        .department-card:nth-child(6) .department-icon i { color: #1abc9c; }
+
+        .project-card-content, .department-content {
+            flex: 1;
+        }
+
+        .project-card-name, .department-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .project-card-value, .department-count {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .row-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="dashboard-container">
+            <div class="dashboard-actions">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <!-- Total Employees -->
+                    <div class="stat-card fade-in">
+                        <div class="stat-main-content">
+                            <div class="stat-icon-container">
+                                <i class="fas fa-users stat-icon"></i>
+                            </div>
+                            <div class="stat-text">
+                                <div class="stat-title">Total Employees</div>
+                                <div class="stat-value">1,254</div>
+                            </div>
+                        </div>
+                        <div class="stat-change positive">
+                            ↑ 12.5% from last month
+                        </div>
+                    </div>
+                
+                    <!-- Male Employees -->
+                    <div class="stat-card fade-in">
+                        <div class="stat-main-content">
+                            <div class="stat-icon-container" style="background: rgba(52, 152, 219, 0.1);">
+                                <i class="fas fa-male stat-icon" style="color: #3498db;"></i>
+                            </div>
+                            <div class="stat-text">
+                                <div class="stat-title">Male Employees</div>
+                                <div class="stat-value">754</div>
+                            </div>
+                        </div>
+                        <div class="stat-change positive">
+                            ↑ 8.3% from last month
+                        </div>
+                    </div>
+                
+                    <!-- Female Employees -->
+                    <div class="stat-card fade-in">
+                        <div class="stat-main-content">
+                            <div class="stat-icon-container" style="background: rgba(232, 67, 147, 0.1);">
+                                <i class="fas fa-female stat-icon" style="color: #e84393;"></i>
+                            </div>
+                            <div class="stat-text">
+                                <div class="stat-title">Female Employees</div>
+                                <div class="stat-value">500</div>
+                            </div>
+                        </div>
+                        <div class="stat-change positive">
+                            ↑ 15.2% from last month
+                        </div>
+                    </div>
+                
+                    <!-- New Hires -->
+                    <div class="stat-card fade-in">
+                        <div class="stat-main-content">
+                            <div class="stat-icon-container" style="background: rgba(46, 204, 113, 0.1);">
+                                <i class="fas fa-user-plus stat-icon" style="color: #2ecc71;"></i>
+                            </div>
+                            <div class="stat-text">
+                                <div class="stat-title">New Hires</div>
+                                <div class="stat-value">42</div>
+                            </div>
+                        </div>
+                        <div class="stat-change negative">
+                            ↓ 3.2% from last month
+                        </div>
+                    </div>
+                
+                    <!-- Active Employees -->
+                    <div class="stat-card fade-in">
+                        <div class="stat-main-content">
+                            <div class="stat-icon-container" style="background: rgba(26, 188, 156, 0.1);">
+                                <i class="fas fa-user-check stat-icon" style="color: #1abc9c;"></i>
+                            </div>
+                            <div class="stat-text">
+                                <div class="stat-title">Active Employees</div>
+                                <div class="stat-value">1,210</div>
+                            </div>
+                        </div>
+                        <div class="stat-change positive">
+                            ↑ 5.7% from last month
+                        </div>
+                    </div>
+                
+                    <!-- Inactive Employees -->
+                    <div class="stat-card fade-in">
+                        <div class="stat-main-content">
+                            <div class="stat-icon-container" style="background: rgba(231, 76, 60, 0.1);">
+
+                                <i class="fa-solid fa-user-xmark fa-lg" style="color: #e74c3c;"></i>
+                            </div>
+                            <div class="stat-text">
+                                <div class="stat-title">Inactive Employees</div>
+                                <div class="stat-value">44</div>
+                            </div>
+                        </div>
+                        <div class="stat-change negative">
+                            ↓ 2.1% from last month
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3 class="card-title" style="margin: 0px auto;">Project Completion</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="genderChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-container">
+            <!-- Projects Card -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3 class="card-title" style="margin: 0px auto;">Projects</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="projectsChart"></canvas>
+                </div>
+                <div class="project-cards">
+                    <div class="project-card fade-in">
+                        <div class="project-card-icon">
+                            <img src="https://th.bing.com/th/id/OIP.MA62NVD3FJ4fTy4wwZ_MygHaHa?rs=1&pid=ImgDetMain" alt="Qatar">
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-name">Qatar</div>
+                            <div class="project-card-value">12</div>
+                        </div>
+                    </div>
+                    <div class="project-card fade-in">
+                        <div class="project-card-icon">
+                            <img src="https://th.bing.com/th/id/OIP.kQPE1sriYk51qtZvSWESwwHaDt?rs=1&pid=ImgDetMain" alt="HRMS">
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-name">HRMS</div>
+                            <div class="project-card-value">8</div>
+                        </div>
+                    </div>
+                    <div class="project-card fade-in">
+                        <div class="project-card-icon">
+                            <img src="https://static.vecteezy.com/system/resources/previews/020/408/746/large_2x/crm-letter-logo-design-on-white-background-crm-creative-circle-letter-logo-concept-crm-letter-design-vector.jpg" alt="CRM">
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-name">CRM</div>
+                            <div class="project-card-value">15</div>
+                        </div>
+                    </div>
+                    <div class="project-card fade-in">
+                        <div class="project-card-icon">
+                            <img src="https://th.bing.com/th/id/OIP.MPTE79EiMBN26TIiQQ9mtQHaEK?rs=1&pid=ImgDetMain" alt="MRF">
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-name">MRF</div>
+                            <div class="project-card-value">6</div>
+                        </div>
+                    </div>
+                    <div class="project-card fade-in">
+                        <div class="project-card-icon">
+                            <img src="https://th.bing.com/th/id/OIP.Abykpj43pyASZoDFuN0Z-QHaFj?rs=1&pid=ImgDetMain" alt="Banking">
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-name">Banking</div>
+                            <div class="project-card-value">16</div>
+                        </div>
+                    </div>
+                    <div class="project-card fade-in">
+                        <div class="project-card-icon">
+                            <img src="https://img.freepik.com/premium-vector/financial-bull-vector-logo-design-template_825834-12798.jpg" alt="Trading">
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-name">Trading</div>
+                            <div class="project-card-value">8</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Distribution Card -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3 class="card-title" style="margin: 0px auto;">Department Wise</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="departmentChart"></canvas>
+                </div>
+                <div class="department-cards">
+                    <div class="department-card fade-in">
+                        <div class="department-icon">
+                            <img src="https://marketplace.canva.com/EAEt-7rAROE/1/0/1600w/canva-gradient-modern-technology-company-developers-logo-9qIf7dAGTXU.jpg" alt="Development">
+                        </div>
+                        <div class="department-content">
+                            <div class="department-name">Development</div>
+                            <div class="department-count">45</div>
+                        </div>
+                    </div>
+                    <div class="department-card fade-in">
+                        <div class="department-icon">
+                            <img src="https://thumbs.dreamstime.com/z/devops-symbol-icon-software-development-operations-concept-plan-code-build-test-release-deploy-operate-monitor-flat-191780458.jpg" alt="Devops">
+                        </div>
+                        <div class="department-content">
+                            <div class="department-name">Devops</div>
+                            <div class="department-count">22</div>
+                        </div>
+                    </div>
+                    <div class="department-card fade-in">
+                        <div class="department-icon">
+                            <img src="https://th.bing.com/th/id/OIP.6VjiLdVnVcNBxsc0z7XcygHaER?rs=1&pid=ImgDetMain" alt="HR">
+                        </div>
+                        <div class="department-content">
+                            <div class="department-name">HR</div>
+                            <div class="department-count">18</div>
+                        </div>
+                    </div>
+                    <div class="department-card fade-in">
+                        <div class="department-icon">
+                            <img src="https://th.bing.com/th/id/OIP.iTJGVn4ckRqWMfFNWWlBLQHaCC?rs=1&pid=ImgDetMain" alt="Testing">
+                        </div>
+                        <div class="department-content">
+                            <div class="department-name">Testing</div>
+                            <div class="department-count">30</div>
+                        </div>
+                    </div>
+                    <div class="department-card fade-in">
+                        <div class="department-icon">
+                            <img src="https://th.bing.com/th/id/OIP.BxFzED7F2bP4RAKkjOpstgHaEK?rs=1&pid=ImgDetMain" alt="Power BI">
+                        </div>
+                        <div class="department-content">
+                            <div class="department-name">Power BI</div>
+                            <div class="department-count">15</div>
+                        </div>
+                    </div>
+                    <div class="department-card fade-in">
+                        <div class="department-icon">
+                            <img src="https://cdn3.f-cdn.com/contestentries/124801/8333182/5472a733d2ff2_thumb900.jpg" alt="Operations">
+                        </div>
+                        <div class="department-content">
+                            <div class="department-name">Operations</div>
+                            <div class="department-count">10</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Projects Chart
+        const projectsCtx = document.getElementById('projectsChart').getContext('2d');
+        const projectsChart = new Chart(projectsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Qatar', 'HRMS', 'CRM', 'MRF', 'Banking', 'Trading'],
+                datasets: [{
+                    label: 'Employees per Project',
+                    data: [12, 8, 15, 6, 16, 8],
+                    backgroundColor: [
+                        '#3498db',
+                        '#e84393',
+                        '#2ecc71',
+                        '#f39c12',
+                        '#9b59b6',
+                        '#1abc9c'
+                    ],
+                    borderRadius: 6,
+                     barThickness: 30 
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Department Distribution Chart
+        const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+        const departmentChart = new Chart(departmentCtx, {
+            type: 'polarArea',
+            data: {
+                labels: ['Development', 'Devops', 'HR', 'Testing', 'Power BI', 'Operations'],
+                datasets: [{
+                    data: [45, 22, 18, 30, 15, 10],
+                    backgroundColor: [
+                        '#3498db',
+                        '#e84393',
+                        '#2ecc71',
+                        '#f39c12',
+                        '#9b59b6',
+                        '#1abc9c'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    r: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gender Chart
+        const genderCtx = document.getElementById('genderChart').getContext('2d');
+        const genderChart = new Chart(genderCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Ongoing', 'Completed'],
+                datasets: [{
+                    data: [6, 4],
+                    backgroundColor: ['#3498db', '#e84393'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
